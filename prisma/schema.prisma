@@ -1,6 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -8,4 +5,184 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model User {
+  id                   Int     @id @default(autoincrement())
+  first_name           String
+  last_name            String?
+  username             String  @unique
+  email                String  @unique
+  phone                String
+  hashed_password      String
+  is_active            Boolean @default(false)
+  hashed_refresh_token String
+
+  followings     Follow[]         @relation("Following")
+  followers      Follow[]         @relation("Follower")
+  posts          Post[]
+  post_like      PostLike[]
+  comment_like   CommentLike[]
+  my_groups      Group[]
+  groups         UserInGroup[]
+  group_messages MessageInGroup[]
+  comments       Comment[]
+  my_chats       Chat[]           @relation("my_chat")
+  my_chats2      Chat[]           @relation("my_chat2")
+  chat_messages  Message[]
+
+  @@map("users")
+}
+
+model Follow {
+  id           Int   @id @default(autoincrement())
+  from         User? @relation("Follower", fields: [followers_id], references: [id])
+  followers_id Int?
+  to           User? @relation("Following", fields: [following_id], references: [id])
+  following_id Int?
+
+  @@map("following")
+}
+
+model Post {
+  id          Int    @id @default(autoincrement())
+  author_id   Int
+  title       String @db.VarChar(100)
+  description String @db.VarChar(500)
+
+  author   User       @relation(fields: [author_id], references: [id])
+  tags     Tag[]
+  contents Content[]
+  likes    PostLike[]
+  comments Comment[]
+
+  @@map("posts")
+}
+
+model Tag {
+  id      Int    @id @default(autoincrement())
+  name    String
+  post_id Int
+
+  post Post @relation(fields: [post_id], references: [id])
+
+  @@map("tags")
+}
+
+model Content {
+  id      Int   @id @default(autoincrement())
+  body    Bytes
+  post_id Int
+
+  post Post @relation(fields: [post_id], references: [id])
+
+  @@map("contents")
+}
+
+model PostLike {
+  id      Int @id @default(autoincrement())
+  post_id Int
+  user_id Int
+
+  post Post @relation(fields: [post_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("post_like")
+}
+
+model Comment {
+  id      Int    @id @default(autoincrement())
+  post_id Int
+  user_id Int
+  text    String
+
+  replyed_comment_id Int?
+  replyed_comment    Comment[] @relation("repled_comment")
+  comment            Comment?  @relation("repled_comment", fields: [replyed_comment_id], references: [id])
+
+  post Post @relation(fields: [post_id], references: [id])
+  user User @relation(fields: [user_id], references: [id])
+
+  likes CommentLike[]
+
+  @@map("comments")
+}
+
+model CommentLike {
+  id         Int @id @default(autoincrement())
+  comment_id Int
+  user_id    Int
+
+  post Comment @relation(fields: [comment_id], references: [id])
+  user User    @relation(fields: [user_id], references: [id])
+
+  @@map("comment_like")
+}
+
+model Group {
+  id       Int @id @default(autoincrement())
+  admin_id Int
+
+  admin    User             @relation(fields: [admin_id], references: [id])
+  users    UserInGroup[]
+  messages MessageInGroup[]
+
+  @@map("groups")
+}
+
+model UserInGroup {
+  id Int @id @default(autoincrement())
+
+  user_id  Int
+  group_id Int
+
+  user  User  @relation(fields: [user_id], references: [id])
+  group Group @relation(fields: [group_id], references: [id])
+
+  @@map("group_users")
+}
+
+model MessageInGroup {
+  id       Int    @id @default(autoincrement())
+  group_id Int
+  user_id  Int
+  body     String
+
+  forward_message_id Int?
+  message            MessageInGroup?  @relation("forwarded", fields: [forward_message_id], references: [id])
+  forward_to         MessageInGroup[] @relation("forwarded")
+
+  user  User  @relation(fields: [user_id], references: [id])
+  group Group @relation(fields: [group_id], references: [id])
+
+  @@map("group_messages")
+}
+
+model Chat {
+  id        Int @id @default(autoincrement())
+  first_id  Int
+  second_id Int
+
+  first_user  User @relation("my_chat", fields: [first_id], references: [id])
+  second_user User @relation("my_chat2", fields: [second_id], references: [id])
+
+  messages Message[]
+
+  @@map("chats")
+}
+
+model Message {
+  id            Int    @id @default(autoincrement())
+  forward_to_id Int?
+  body          String
+  user_id       Int
+  chat_id       Int
+
+  user User @relation(fields: [user_id], references: [id])
+  chat Chat @relation(fields: [chat_id], references: [id])
+
+  message    Message[] @relation("message")
+  forward_to Message?  @relation("message", fields: [forward_to_id], references: [id])
+
+  @@map("chat_messages")
 }
