@@ -13,11 +13,12 @@ model User {
   last_name            String?
   username             String  @unique
   email                String  @unique
-  phone                String
+  phone                String?
   hashed_password      String
   is_active            Boolean @default(false)
   hashed_refresh_token String
 
+  profile        Profile[]
   followings     Follow[]         @relation("Following")
   followers      Follow[]         @relation("Follower")
   posts          Post[]
@@ -185,4 +186,14 @@ model Message {
   forward_to Message?  @relation("message", fields: [forward_to_id], references: [id])
 
   @@map("chat_messages")
+}
+
+model Profile {
+  id      Int   @id @default(autoincrement())
+  user_id Int
+  body    Bytes
+
+  user User @relation(fields: [user_id], references: [id])
+
+  @@map("profiles")
 }
