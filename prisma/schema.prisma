@@ -12,11 +12,12 @@ model User {
   first_name           String
   last_name            String?
   username             String  @unique
-  email                String  @unique
-  phone                String?
+  login                String  @unique
   hashed_password      String
   is_active            Boolean @default(false)
-  hashed_refresh_token String
+  is_admin             Boolean @default(false)
+  activation_link      String?
+  hashed_refresh_token String?
 
   profile        Profile[]
   followings     Follow[]         @relation("Following")

@@ -25,7 +25,7 @@ const start = async () => {
     const document = SwaggerModule.createDocument(app, swaggerConfig);
     SwaggerModule.setup('choy/docs', app, document);
 
-    app.use(cookieParser);
+    app.use(cookieParser());
     const PORT = config.get<number>('PORT');
     await app.listen(PORT, () => {
       console.log(`Server is running on port: ${PORT}`);

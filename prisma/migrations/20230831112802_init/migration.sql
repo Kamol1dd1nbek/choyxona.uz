@@ -4,11 +4,12 @@ CREATE TABLE "users" (
     "first_name" TEXT NOT NULL,
     "last_name" TEXT,
     "username" TEXT NOT NULL,
-    "email" TEXT NOT NULL,
-    "phone" TEXT,
+    "login" TEXT NOT NULL,
     "hashed_password" TEXT NOT NULL,
     "is_active" BOOLEAN NOT NULL DEFAULT false,
-    "hashed_refresh_token" TEXT NOT NULL,
+    "is_admin" BOOLEAN NOT NULL DEFAULT false,
+    "activation_link" TEXT,
+    "hashed_refresh_token" TEXT,
 
     CONSTRAINT "users_pkey" PRIMARY KEY ("id")
 );
@@ -140,7 +141,7 @@ CREATE TABLE "profiles" (
 CREATE UNIQUE INDEX "users_username_key" ON "users"("username");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "users_email_key" ON "users"("email");
+CREATE UNIQUE INDEX "users_login_key" ON "users"("login");
 
 -- AddForeignKey
 ALTER TABLE "following" ADD CONSTRAINT "following_followers_id_fkey" FOREIGN KEY ("followers_id") REFERENCES "users"("id") ON DELETE SET NULL ON UPDATE CASCADE;
