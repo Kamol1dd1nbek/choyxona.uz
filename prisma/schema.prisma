@@ -190,9 +190,9 @@ model Message {
 }
 
 model Profile {
-  id      Int   @id @default(autoincrement())
+  id      Int    @id @default(autoincrement())
   user_id Int
-  body    Bytes
+  url     String
 
   user User @relation(fields: [user_id], references: [id])
 

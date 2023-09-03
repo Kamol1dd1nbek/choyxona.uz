@@ -132,7 +132,7 @@ CREATE TABLE "chat_messages" (
 CREATE TABLE "profiles" (
     "id" SERIAL NOT NULL,
     "user_id" INTEGER NOT NULL,
-    "body" BYTEA NOT NULL,
+    "url" TEXT NOT NULL,
 
     CONSTRAINT "profiles_pkey" PRIMARY KEY ("id")
 );
