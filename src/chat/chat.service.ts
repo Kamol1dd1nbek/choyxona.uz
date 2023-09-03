@@ -97,4 +97,26 @@ export class ChatService {
     }
     return chats;
   }
+
+  async viewChat(user_id: number, chat_id: number) {
+    const chat = await this.prismaService.chat.findFirst({
+      where: {
+        id: chat_id,
+      },
+    });
+    console.log(user_id);
+
+    if (chat.first_id !== user_id && chat.second_id !== user_id) {
+      throw new NotFoundException('Chat not found');
+    }
+    const messages = await this.prismaService.chat.findFirst({
+      include: {
+        messages: true,
+      },
+      where: {
+        id: chat_id,
+      },
+    });
+    return messages;
+  }
 }

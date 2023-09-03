@@ -40,4 +40,10 @@ export class ChatController {
   myChats(@GetCurrentUserId() user_id: number) {
     return this.chatService.myChats(user_id);
   }
+
+  @ApiOperation({ summary: '| My chats' })
+  @Post('my/:id')
+  viewChat(@GetCurrentUserId() user_id: number, @Param("id") chat_id: number) {
+    return this.chatService.viewChat(user_id, +chat_id);
+  }
 }
