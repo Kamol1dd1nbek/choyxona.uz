@@ -14,6 +14,7 @@ import { resolve } from 'path';
 import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
 import { PostModule } from './post/post.module';
+import { CommentModule } from './comment/comment.module';
 
 @Module({
   imports: [
@@ -33,6 +34,7 @@ import { PostModule } from './post/post.module';
     ChatModule,
     MessageModule,
     PostModule,
+    CommentModule,
   ],
   providers: [AppService],
 })
