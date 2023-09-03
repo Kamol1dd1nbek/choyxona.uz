@@ -144,8 +144,14 @@ export class AuthService {
       }
     } else {
       const data = await this.redisservice.set({ phone_number: login });
-      console.log('data', data);
-
+      await this.prismaService.user.update({
+        data: {
+          activation_link: null
+        },
+        where: {
+          id: updatedUser.id
+        }
+      });
       return {
         message: `We have sent a one-time-password to phone: ${updatedUser.login}`,
         tokens,

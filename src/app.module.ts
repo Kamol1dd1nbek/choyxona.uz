@@ -6,6 +6,7 @@ import { UserModule } from './user/user.module';
 import { AuthModule } from './auth/auth.module';
 import { RedisModule } from './redis/redis.module';
 import { MailModule } from './mail/mail.module';
+import { ConnectionsModule } from './connections/connections.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { MailModule } from './mail/mail.module';
     AuthModule,
     RedisModule,
     MailModule,
+    ConnectionsModule,
   ],
   providers: [AppService],
 })
