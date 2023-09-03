@@ -73,7 +73,7 @@ model Tag {
 
 model Content {
   id      Int   @id @default(autoincrement())
-  body    Bytes
+  url    String
   post_id Int
 
   post Post @relation(fields: [post_id], references: [id])

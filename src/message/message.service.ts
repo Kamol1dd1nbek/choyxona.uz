@@ -1,6 +1,7 @@
-import { PrismaService } from './../prisma/prisma.service';
+
 import { Injectable, BadRequestException, Body } from '@nestjs/common';
 import { CreateMessageDto, RemoveMessageDto, UpdateMessageDto } from './dto';
+import { PrismaService } from '../prisma/prisma.service';
 
 @Injectable()
 export class MessageService {

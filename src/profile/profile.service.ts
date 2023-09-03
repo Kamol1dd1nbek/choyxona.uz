@@ -10,7 +10,7 @@ export class ProfileService {
   ) {}
 
   async setProfilePhoto(id: number, image: any) {
-    const fileName = await this.fileService.createFile(image);
+    const fileName = await this.fileService.createFile(image, "profile");
     const profile = await this.prismaService.profile.create({
       data: {
         user_id: id,

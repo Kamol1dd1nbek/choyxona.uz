@@ -13,6 +13,7 @@ import { ServeStaticModule } from '@nestjs/serve-static';
 import { resolve } from 'path';
 import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
+import { PostModule } from './post/post.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { MessageModule } from './message/message.module';
     FilesModule,
     ChatModule,
     MessageModule,
+    PostModule,
   ],
   providers: [AppService],
 })

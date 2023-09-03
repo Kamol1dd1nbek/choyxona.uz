@@ -12,7 +12,8 @@ import { CreateMessageDto } from './dto/create-message.dto';
 import { UpdateMessageDto } from './dto/update-message.dto';
 import { GetCurrentUserId } from '../common/decorators/get-current-user-id.decorator';
 import { RemoveMessageDto } from './dto';
-
+import { ApiTags } from '@nestjs/swagger';
+@ApiTags("Messages")
 @Controller('message')
 export class MessageController {
   constructor(private readonly messageService: MessageService) {}
