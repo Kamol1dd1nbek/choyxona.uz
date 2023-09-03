@@ -9,28 +9,40 @@ import {
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { ApiOperation, ApiTags } from '@nestjs/swagger';
 
-@Controller('user')
+@ApiTags('Users')
+@Controller('users')
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Get()
-  findAll() {
+  @ApiOperation({ summary: '| Get all users list' })
+  @Get('list')
+  findAllUsers() {
     return this.userService.findAll();
   }
 
+  @ApiOperation({ summary: '| Find user by id' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.userService.findOne(+id);
+  getById(@Param('id') id: string) {
+    return this.userService.findById(+id);
   }
 
+  @ApiOperation({ summary: '| Find user by username' })
+  @Get('u/:username')
+  findByUsername(@Param('username') username: string) {
+    return this.userService.findByUsername(username);
+  }
+
+  @ApiOperation({ summary: '| Update user' })
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
+  updateUser(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
     return this.userService.update(+id, updateUserDto);
   }
 
+  @ApiOperation({ summary: '| Delete user' })
   @Delete(':id')
-  remove(@Param('id') id: string) {
+  removeUser(@Param('id') id: string) {
     return this.userService.remove(+id);
   }
 }
