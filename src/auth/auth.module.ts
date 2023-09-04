@@ -23,7 +23,7 @@ import { AccessTokenGuard } from '../common/guards';
     RefreshTokenFromCookieStrategy,
     {
       provide: APP_GUARD,
-      useClass: AccessTokenGuard,
+      useClass: AccessTokenGuard
     },
   ],
 })

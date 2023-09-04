@@ -17,6 +17,12 @@ import { PostModule } from './post/post.module';
 import { CommentModule } from './comment/comment.module';
 import { PostLikeModule } from './post-like/post-like.module';
 import { GroupModule } from './group/group.module';
+import { MessageInGroupModule } from './message-in-group/message-in-group.module';
+import { WinstonModule } from 'nest-winston';
+import * as winston from 'winston';
+import { APP_GUARD } from '@nestjs/core';
+import { ActiveGuard } from './common/guards';
+import { JwtModule } from '@nestjs/jwt';
 
 @Module({
   imports: [
@@ -39,7 +45,19 @@ import { GroupModule } from './group/group.module';
     CommentModule,
     PostLikeModule,
     GroupModule,
+    JwtModule,
+    MessageInGroupModule,
+    WinstonModule,
+    WinstonModule.forRoot({
+      transports: [
+        new winston.transports.File({ filename: 'error.txt', level: 'error' }),
+      ],
+    }),
   ],
-  providers: [AppService],
+  providers: [AppService,
+  {
+    provide: APP_GUARD,
+    useClass: ActiveGuard
+  }],
 })
 export class AppModule {}

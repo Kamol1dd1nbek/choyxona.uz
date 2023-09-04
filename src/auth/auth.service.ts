@@ -5,6 +5,7 @@ import {
   HttpException,
   HttpStatus,
   ForbiddenException,
+  UseGuards,
 } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import * as bcrypt from 'bcrypt';
@@ -15,6 +16,7 @@ import { MailService } from '../mail/mail.service';
 import { JwtService } from '@nestjs/jwt';
 import { v4 } from 'uuid';
 import { VerifyOtpDto } from '../redis/dto';
+import { Active } from '../common/decorators/no-access.decorator';
 
 @Injectable()
 export class AuthService {
@@ -25,7 +27,7 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  //SIGNIN
+  //SIGNIN 
   async signin(loginDto: LogInDto, res: Response) {
     const { username, password } = loginDto;
     const user = await this.prismaService.user.findFirst({
@@ -41,12 +43,13 @@ export class AuthService {
     );
     if (!isMatchPassword)
       throw new BadRequestException('Username or password wrong');
-
+    user.is_active = true;
     const tokens = await this.getTokens(user);
     const hashed_refresh_token = await bcrypt.hash(tokens.refresh_token, 8);
     await this.prismaService.user.update({
       data: {
         hashed_refresh_token,
+        is_active: true
       },
       where: {
         id: user.id,
@@ -133,8 +136,7 @@ export class AuthService {
       try {
         await this.mailService.sendUserConfirmation(updatedUser);
         return {
-          message: `We have sent a confirmation link to email: ${updatedUser.login}`,
-          tokens,
+          message: `We have sent a confirmation link to email: ${updatedUser.login}`
         };
       } catch (error) {
         await this.prismaService.user.delete({
@@ -154,7 +156,6 @@ export class AuthService {
       });
       return {
         message: `We have sent a one-time-password to phone: ${updatedUser.login}`,
-        tokens,
         details: data.details,
       };
     }

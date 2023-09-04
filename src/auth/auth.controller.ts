@@ -19,6 +19,7 @@ import { GetCurrentUserId } from '../common/decorators/get-current-user-id.decor
 import { Public } from '../common/decorators/public.decorator';
 import { RefreshTokenGuard } from '../common/guards';
 import { GetCurrentUser } from '../common/decorators/get-current-user.decorator';
+import { Active } from '../common/decorators/no-access.decorator';
 
 @ApiTags('AUTH')
 @Controller('auth')
@@ -26,6 +27,7 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
+  @Active()
   @ApiOperation({ summary: '| LogIn' })
   @Post('signin')
   signin(
@@ -36,6 +38,7 @@ export class AuthController {
   }
 
   @Public()
+  @Active()
   @ApiOperation({ summary: '| SignUp' })
   @Post('signup')
   signup(
@@ -56,6 +59,7 @@ export class AuthController {
   }
 
   @Public()
+  @Active()
   @ApiOperation({ summary: '| Verify: email' })
   @Get('activate/:id')
   verifyEmail(
@@ -66,6 +70,7 @@ export class AuthController {
   }
 
   @Public()
+  @Active()
   @ApiOperation({ summary: '| Verify: otp' })
   @Post('activate/otp')
   verifyOtp(

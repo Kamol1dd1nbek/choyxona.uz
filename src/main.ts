@@ -1,6 +1,6 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, Logger } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import * as cookieParser from 'cookie-parser';
@@ -11,6 +11,7 @@ const start = async () => {
     app.setGlobalPrefix('choy');
     const config = app.get(ConfigService);
     app.useGlobalPipes(new ValidationPipe());
+    const logger = new Logger('start');
 
     const swaggerConfig = new DocumentBuilder()
       .setTitle("'Choyxona' social network")
