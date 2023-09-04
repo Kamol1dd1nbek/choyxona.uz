@@ -57,29 +57,31 @@ export class GroupService {
   async joinGroup(user_id: number, group_id: number) {
     const group = await this.prismaService.group.findFirst({
       include: {
-        users: true
+        users: true,
       },
       where: {
-        id: group_id
-      }
+        id: group_id,
+      },
     });
-    if ( !group ) throw new NotFoundException("Group not found");
+    if (!group) throw new NotFoundException('Group not found');
     const isJoin = await this.prismaService.userInGroup.findFirst({
       where: {
         user_id,
-        group_id
-      }
+        group_id,
+      },
     });
-    if ( group.admin_id == user_id ) throw new BadRequestException("You are admin in this group");
-    if (isJoin) throw new BadRequestException("You are already a member of the group");
+    if (group.admin_id == user_id)
+      throw new BadRequestException('You are admin in this group');
+    if (isJoin)
+      throw new BadRequestException('You are already a member of the group');
     if (!isJoin) {
       await this.prismaService.userInGroup.create({
         data: {
           user_id,
-          group_id
-        }
+          group_id,
+        },
       });
-      return { message: "You have joined this group" }
+      return { message: 'You have joined this group' };
     }
   }
 }
