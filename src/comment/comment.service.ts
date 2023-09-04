@@ -32,14 +32,6 @@ export class CommentService {
     return newComment;
   }
 
-  findAll() {
-    return `This action returns all comment`;
-  }
-
-  findOne(id: number) {
-    return `This action returns a #${id} comment`;
-  }
-
   async update(id: number, updateCommentDto: UpdateCommentDto) {
     const { text, comment_id } = updateCommentDto;
     const comment = await this.prismaService.comment.findFirst({

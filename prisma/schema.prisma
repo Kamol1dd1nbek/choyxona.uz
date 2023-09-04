@@ -72,8 +72,8 @@ model Tag {
 }
 
 model Content {
-  id      Int   @id @default(autoincrement())
-  url    String
+  id      Int    @id @default(autoincrement())
+  url     String
   post_id Int
 
   post Post @relation(fields: [post_id], references: [id])
@@ -122,8 +122,9 @@ model CommentLike {
 }
 
 model Group {
-  id       Int @id @default(autoincrement())
+  id       Int    @id @default(autoincrement())
   admin_id Int
+  name     String @unique
 
   admin    User             @relation(fields: [admin_id], references: [id])
   users    UserInGroup[]

@@ -15,6 +15,8 @@ import { ChatModule } from './chat/chat.module';
 import { MessageModule } from './message/message.module';
 import { PostModule } from './post/post.module';
 import { CommentModule } from './comment/comment.module';
+import { PostLikeModule } from './post-like/post-like.module';
+import { GroupModule } from './group/group.module';
 
 @Module({
   imports: [
@@ -35,6 +37,8 @@ import { CommentModule } from './comment/comment.module';
     MessageModule,
     PostModule,
     CommentModule,
+    PostLikeModule,
+    GroupModule,
   ],
   providers: [AppService],
 })
