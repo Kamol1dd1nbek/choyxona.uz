@@ -26,25 +26,31 @@ export class ActiveGuard implements CanActivate {
     const authHeader = req.headers.authorization;
     if (!authHeader) {
       throw new UnauthorizedException({
-        message: 'The user has not been authorized',
+        message: 'The user has not been authorized.',
       });
     }
     const bearer = authHeader.split(' ')[0];
     const token = authHeader.split(' ')[1];
     if (bearer !== 'Bearer' || !token) {
       throw new UnauthorizedException({
-        message: 'The user has not been authorized',
+        message: 'The user has not been authorized..',
       });
     }
-    let user: any;
+    let user: any; 
     try {
       user = this.jwtService.verify(token, {
         secret: process.env.REFRESH_TOKEN_KEY,
       });
     } catch (error) {
-      throw new UnauthorizedException({
-        message: 'The user has not been authorized',
-      });
+      try {
+        user = this.jwtService.verify(token, {
+          secret: process.env.ACCESS_TOKEN_KEY,
+        });
+      } catch (error) {
+        throw new UnauthorizedException({
+          message: 'The user has not been authorized..',
+        });
+      }
     }
     req.user = user;
     const permission = user.is_active === true;

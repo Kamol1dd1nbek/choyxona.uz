@@ -31,7 +31,7 @@ export class PostService {
         title,
         description,
       },
-    });
+    }); 
 
     tagsArry.forEach(async (tag) => {
       await this.prismaService.tag.create({
@@ -90,28 +90,57 @@ export class PostService {
     });
     if (!post) throw new NotFoundException('Post not found');
 
-    Promise.all([
-      post.contents.forEach(async (content) => {
-        await this.prismaService.content.delete({
-          where: {
-            id: content.id,
-          },
-        });
-        fs.unlinkSync(path.resolve(__dirname, '..', 'posts', content.url));
-      }),
-      post.tags.forEach(async (tag) => {
-        await this.prismaService.tag.delete({
-          where: {
-            id: tag.id,
-          },
-        });
-      }),
-    ]);
-    await this.prismaService.post.delete({
-      where: {
-        id,
-      },
-    });
+    try {
+      Promise.all([
+        post.contents.forEach(async (content) => {
+          await this.prismaService.content.delete({
+            where: {
+              id: content.id,
+            },
+          });
+          fs.unlinkSync(path.resolve(__dirname, '..', 'posts', content.url));
+        }),
+        post.tags.forEach(async (tag) => {
+          await this.prismaService.tag.delete({
+            where: {
+              id: tag.id,
+            },
+          });
+        }),
+      ]);
+      await this.prismaService.post.delete({
+        where: {
+          id,
+        },
+      });
+    } catch (error) {
+      throw new BadRequestException("Pending...")
+    }
+    
     return { status: 'Ok', message: 'Successfully deleted' };
+  }
+
+  async globalSearch(tag: string) {
+    const tags = await this.prismaService.tag.findMany({
+      where: {
+        name: {
+          contains: tag
+        }
+      }
+    });
+    if (tags.length === 0) throw new BadRequestException("No result");
+    const posts = [];
+    tags.forEach(async (tag) => {
+      const post = await this.prismaService.post.findFirst({
+        where: {
+          id: tag.post_id
+        }
+      });
+      if (post) {
+        posts.push(post);
+      }
+    });
+    if (posts.length === 0) throw new NotFoundException("No result");
+    return posts;
   }
 }

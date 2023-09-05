@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, UseInterceptors, UploadedFiles, Query } from '@nestjs/common';
 import { PostService } from './post.service';import { CreatePostDto } from './dto';
 import { GetCurrentUserId } from '../common/decorators/get-current-user-id.decorator';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
@@ -33,5 +33,12 @@ export class PostController {
   @Delete(':id')
   remove(@GetCurrentUserId() userId: number, @Param('id') id: string) {
     return this.postService.removePost(userId, +id);
+  }
+
+  @Post("search/:tag")
+  globalSearch(
+    @Param("tag") tag: string
+  ) {
+    return this.postService.globalSearch(tag);
   }
 }

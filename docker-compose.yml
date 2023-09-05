@@ -1,0 +1,31 @@
+version: '3.8'
+services:
+  nestjs-app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      - prisma
+    environment:
+      - DATABASE_URL=postgresql://postgres:06062006Kamoliddin@localhost:5432/choyxona?schema=public
+    networks:
+      - app-network
+
+  prisma:
+    image: prismagraphql/prisma:latest
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=06062006Kamoliddin
+      - POSTGRES_DB=choyxona
+    volumes:
+      - ./prisma:/prisma
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
